@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Um Convite Especial ✨</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #141414 0%, #252525 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .container {
+      position: relative;
+      width: 400px;
+      height: 400px;
+    }
+
+    .envelope-closed,
+    .envelope-open {
+      position: absolute;
+      width: 100%;
+      height: 300px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0px 30px rgba(145,145,145,0.3);
+      overflow: hidden;
+    }
+
+    .envelope-closed {
+      background: linear-gradient(145deg, #f3f4f6 0%, #e5e7eb 100%);
+      border: 2px solid #d1d5db;
+      opacity: 1;
+      transition: all 0.3s ease-in-out;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .envelope-closed:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 40px rgba(145,145,145,0.3);
+    }
+
+    .envelope-closed::before {
+      content: '💌';
+      font-size: 80px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .envelope-open {
+      background: linear-gradient(145deg, #f3f3f3 0%, #d1d1d1 100%);
+      border: 2px solid #636363;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+    }
+
+    .envelope-open::before {
+      content: '📃';
+      font-size: 80px;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    .message {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 2s ease-in-out;
+      color: white;
+      padding: 20px;
+      top: 20px;
+    }
+
+    .message.visible {
+      opacity: 1;
+    }
+
+    .message h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    .message p {
+      font-size: 1.2em;
+      line-height: 1.6;
+      margin-bottom: 15px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .valorant-logo {
+      color: #4f5cd1;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .sparkle {
+      position: absolute;
+      color: #1f245f;
+      font-size: 20px;
+      animation: sparkle 2s ease-in-out infinite;
+    }
+
+    .sparkle:nth-child(1) { top: 40px; left: -60px; animation-delay: 0s; }
+    .sparkle:nth-child(2) { top: 10px; right: -60px; animation-delay: 0.5s; }
+    .sparkle:nth-child(3) { bottom: 20px; left: -40px; animation-delay: 1s; }
+    .sparkle:nth-child(4) { bottom: 40px; right: -30px; animation-delay: 1.5s; }
+
+    .click-hint {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 16px;
+      animation: pulse 2s infinite;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    .click-hint.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .response-buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+.response-buttons button {
+  background: linear-gradient(135deg, #3b3b3b, #252525);
+  color: white;
+  font-weight: bold;
+  padding: 12px 20px;
+  font-size: 1em;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.response-buttons button:hover {
+  background: linear-gradient(135deg, #252525, #3b3b3b);
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+@keyframes rotateLinear {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+    .thank-you-message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.2em;
+      color: white;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      width: 100%;
+      padding: 0 40px;
+    }
+
+    .thank-you-message.visible {
+      opacity: 1;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes glow {
+      0% { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.5); }
+      100% { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.8); }
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 0.7; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    @keyframes rotate-border {
+  0% {
+    --angle: 0deg;
+  }
+  100% {
+    --angle: 360deg;
+  }
+}
+
+/* Para telas menores (iPhone 14, Android) */
+@media (max-width: 420px) {
+  .container {
+    width: 90vw;
+  }
+
+  .sparkle:nth-child(1) { top: -50px; left: 5px; }
+  .sparkle:nth-child(2) { top: -40px; right: -10px; }
+  .sparkle:nth-child(3) { bottom: -10px; left: 10px; }
+  .sparkle:nth-child(4) { bottom: 30px; right: -5px; }
+
+  .thank-you-message {
+    font-size: 1em;
+    padding: 0 10px;
+  }
+
+  .message h1 { font-size: 2em; }
+  .message p { font-size: 1em; }
+  .response-buttons button {
+    padding: 10px 16px;
+    font-size: 0.95em;
+  }
+}
+
+/* Para telas médias (iPhone 14 Pro Max, tablets estreitos) */
+@media (min-width: 421px) and (max-width: 480px) {
+  .container {
+    width: 380px;
+  }
+
+  .sparkle:nth-child(1) { top: -50px; left: 0px; }
+  .sparkle:nth-child(2) { top: -40px; right: -20px; }
+  .sparkle:nth-child(3) { bottom: -20px; left: 0px; }
+  .sparkle:nth-child(4) { bottom: 40px; right: -15px; }
+
+  .thank-you-message {
+    font-size: 1.1em;
+    padding: 0 15px;
+  }
+
+  .message h1 { font-size: 2.2em; }
+  .message p { font-size: 1.1em; }
+}
+
+    .envelope-closed.hidden { opacity: 0; pointer-events: none; }
+    .envelope-open.visible { opacity: 1; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- Brilhinhos ao redor -->
+  <div class="sparkle">✨</div>
+  <div class="sparkle">⭐</div>
+  <div class="sparkle">⭐</div>
+  <div class="sparkle">✨</div>
+
+  <!-- Carta fechada -->
+  <div class="envelope-closed" id="envelopeClosed"></div>
+
+  <!-- Carta aberta -->
+  <div class="envelope-open" id="envelopeOpen"></div>
+
+  <!-- Mensagem final com botões -->
+  <div class="message" id="message">
+    <h1>Oi linda!</h1>
+    <p>Gostarias de jogar um <span class="valorant-logo">valzinho</span> ou <span class="valorant-logo">fortzinho</span> comigo mais tarde?</p>
+    <p>ior compani is oni ofi de bestis endi aueis meiquis mi repi 😁</p>
+
+<div class="response-buttons" id="responseButtons">
+      <button onclick="sendResponse('Sim, linda')">Sim, linda!</button>
+      <button onclick="sendResponse('Claro, linda')">Claro, linda!</button>
+      <button onclick="sendResponse('KKKKKKKKK QUERO MUITO LINDA!')">KKKKKKKKK QUERO MUITO LINDA!</button>
+</div>
+
+</div>
+
+  <!-- Dica de clique -->
+  <div class="click-hint" id="clickHint">👆 Abra o convite!</div>
+
+<div class="thank-you-message" id="thankYouMessage">
+  uffa, ainda bem, tava com medo de você clicar em não 🥺
+</div>
+
+  <script>
+    const envelopeClosed = document.getElementById('envelopeClosed');
+    const envelopeOpen = document.getElementById('envelopeOpen');
+    const message = document.getElementById('message');
+    const clickHint = document.getElementById('clickHint');
+
+    envelopeClosed.addEventListener('click', openEnvelope);
+
+    function openEnvelope() {
+      envelopeClosed.classList.add('hidden');
+      clickHint.remove();
+
+      setTimeout(() => {
+        envelopeOpen.classList.add('visible');
+      }, 1500);
+
+      setTimeout(() => {
+        envelopeOpen.classList.remove('visible');
+        setTimeout(() => {
+          message.classList.add('visible');
+
+          // Mostra os botões 2s depois da mensagem
+          setTimeout(() => {
+            document.getElementById('responseButtons').classList.add('visible');
+          }, 2000);
+
+        }, 1500);
+      }, 4000);
+    }
+
+function sendResponse(choice) {
+  const webhookURL = 'https://discord.com/api/webhooks/1395172692491108412/bgVCMkPF7cvdxxOY2c2Ov0DSGO-WlMVLmkELtKI7BrqC0aPk1r8XcWRwqOk21WHt_M-z';
+
+  const payload = {
+    content: `Ela escolheu: **${choice}** 💘`
+  };
+
+  fetch(webhookURL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(error => {
+    console.error('Erro ao enviar para o Discord:', error);
+  });
+
+  // 🔥 Esconde toda a mensagem original
+  const messageContainer = document.getElementById('message');
+  if (messageContainer) {
+    messageContainer.style.display = 'none';
+  }
+
+  // ✅ Mostra só a thank-you-message
+  const thankYou = document.getElementById('thankYouMessage');
+  thankYou.classList.add('visible');
+}
+
+  </script>
+</body>
+</html>
